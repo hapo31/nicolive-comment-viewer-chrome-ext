@@ -1,0 +1,17 @@
+{
+    "manifest_version": 2,
+    "name": "NicoLive CommentViewer",
+    "description": "Pure javascript comment viewer",
+    "version": "1.0",
+    "content_scripts": [
+        {
+            "matches": [
+                "http://live.nicovideo.jp/watch/*",
+                "http://live2.nicovideo.jp/watch/*"
+            ],
+            "js": ["script.js"]
+        }
+    ],
+    "permissions": [
+    ]
+}

@@ -1,0 +1,20 @@
+{
+  "extends": ["tslint:recommended"],
+  // "rulesDirectory": "./tslint-rules",
+  "rules": {
+    "arrow-parens": false,
+    "interface-over-type-literal": false,
+    "ordered-imports": false,
+    "trailing-comma": false,
+    "member-access": false,
+    "semicolon": false,
+    "object-literal-sort-keys": false,
+    "no-console": false,
+    "member-ordering": false,
+    "interface-name": false,
+    "no-namespace": false,
+    "max-classes-per-file": false
+    // "strict-null-checks-of-nullable-number": true
+  },
+  "exclude": ["tslint-rules", "typings"]
+}
