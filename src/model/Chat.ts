@@ -14,11 +14,14 @@ export type ChatData = {
 
 export class Thread {
   public readonly id: number;
-  public readonly chat: Chat;
+  public chatList: Chat[] = [];
 
-  constructor(chatData: ChatData) {
-    this.id = chatData.thread;
-    this.chat = new Chat(chatData);
+  constructor(threadId: number) {
+    this.id = threadId;
+  }
+
+  public pushChatData(data: ChatData) {
+    this.chatList.push(new Chat(data));
   }
 }
 

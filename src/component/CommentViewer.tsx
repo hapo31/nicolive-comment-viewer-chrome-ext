@@ -12,7 +12,7 @@ export default class CommentViewer extends React.Component<{
       return;
     }
 
-    // this.props.commentViewer.connectMessageServer();
+    this.props.commentViewer.connectMessageServer();
   }
 
   render() {
@@ -26,14 +26,14 @@ export default class CommentViewer extends React.Component<{
         {this.props.commentViewer.threads.map(thread => {
           return (
             <div>
-              ID: {thread.id}
-              {(() => {
+              ThreadID: {thread.id}
+              {thread.chatList.map(v => {
                 return (
                   <div>
-                    No:{thread.chat.commentNo} {thread.chat.content}
+                    No:{v.commentNo} {v.content}
                   </div>
                 );
-              })()}
+              })}
             </div>
           );
         })}
