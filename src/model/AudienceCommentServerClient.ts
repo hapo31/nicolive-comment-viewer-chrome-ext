@@ -1,18 +1,16 @@
 import { ChatData } from "./Chat";
+import ICommentServerClient from "./ICommentServerClient";
 
-export default class CommentServerClient implements CommentServerClient {
+export default class AudienceCommentServerClient
+  implements ICommentServerClient {
   private retryCount = 0;
-  constructor(
-    public addr: string,
-    public port: number,
-    public threadId: number
-  ) {}
+  constructor(public webSocketUrl: string) {}
 
   public connect = (callback: (data: ChatData) => void) => {
-    const conn = new WebSocket(`ws://${this.addr}:${this.port}/websocket`);
+    const conn = new WebSocket(this.webSocketUrl);
     conn.onopen = _ => {
       this.retryCount = 0;
-      console.log(`コメントサーバーに接続しました。`);
+      console.log(`視聴者コメントサーバーに接続しました。`);
     };
     conn.onmessage = e => {
       console.log(e.data);
@@ -25,7 +23,7 @@ export default class CommentServerClient implements CommentServerClient {
       this.retryCount++;
       if (this.retryCount <= 3) {
         console.log(
-          `[${this.threadId}] コメントサーバーから切断されました。${3 *
+          `視聴者コメントサーバーから切断されました。${3 *
             this.retryCount}秒後に再接続します...`
         );
         setTimeout(this.connect, 3000 * this.retryCount, callback);

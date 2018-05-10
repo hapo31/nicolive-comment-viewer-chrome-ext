@@ -1,4 +1,4 @@
-export default class GetPlayerStatusClient {
+export default class LiveGetPlayerStatusClient {
   static async fetch(liveId: string) {
     return new Promise<MessageServerInfo[]>((resolve, reject) => {
       const xhr = new XMLHttpRequest();
