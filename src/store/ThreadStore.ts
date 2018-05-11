@@ -16,4 +16,10 @@ export default class ThreadStore {
     // 追加のたびにソートするのはパフォーマンスまずそう
     this.chatList.sort((a, b) => a.commentNo - b.commentNo);
   }
+
+  public get lastChat() {
+    return this.chatList.length !== 0
+      ? this.chatList[this.chatList.length - 1]
+      : null;
+  }
 }

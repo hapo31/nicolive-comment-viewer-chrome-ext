@@ -13,7 +13,7 @@ export type ChatData = {
 };
 
 export class Chat {
-  public readonly content: string;
+  public readonly comment: string;
   public readonly date: Date;
   public readonly locale: string;
   public readonly is184: boolean;
@@ -23,7 +23,7 @@ export class Chat {
   public readonly vPos: number;
 
   constructor(data: ChatData) {
-    this.content = data.content;
+    this.comment = data.content;
     this.date = new Date(data.date * 1000 + data.date_usec / 1000);
     this.locale = data.locale;
     this.is184 = data.anonymity === 1;
