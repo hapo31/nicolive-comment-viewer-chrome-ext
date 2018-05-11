@@ -14,5 +14,5 @@ class NicoLiveData {
   }
 }
 
-const nicoLiveData = new NicoLiveData("embedded-data").nicoliveEmbeddedData;
+const nicoLiveData = new NicoLiveData("embedded-data").nicoliveEmbeddedData!;
 export default nicoLiveData;
