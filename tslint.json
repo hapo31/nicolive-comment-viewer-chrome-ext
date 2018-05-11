@@ -13,6 +13,7 @@
     "member-ordering": false,
     "interface-name": false,
     "no-namespace": false,
+    "noUnusedLocals": true,
     "max-classes-per-file": false
     // "strict-null-checks-of-nullable-number": true
   },

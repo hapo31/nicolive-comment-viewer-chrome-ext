@@ -10,8 +10,8 @@ export type OnReceiveHanlder = (chatData: Partial<Chat>) => void;
 
 export default class CommentViewerStore {
   @observable private threads: ThreadStore[] = [];
+  @observable private isBroadcaster: boolean = true;
   @observable public appStartDate: Date = new Date();
-  @observable public isBroadcaster: boolean = true;
 
   public commentServerClients: ICommentServerClient[] = [];
 
@@ -31,32 +31,30 @@ export default class CommentViewerStore {
   @action.bound
   public async connectMessageServer() {
     const liveId = this.getLiveId();
-    if (nicoLiveData) {
-      // 配信者かどうか
-      this.isBroadcaster = nicoLiveData.user.isBroadcaster;
-      if (this.isBroadcaster) {
-        // 配信者の場合はAPIから全てのコメントサーバーの情報を取得する
-        const msList = await LiveGetThreadsClient.fetch(liveId);
-        this.threads = msList.map(v => new ThreadStore({ threadId: v.thread }));
-        // メッセージサーバーの一覧からコメントサーバーに接続するための情報を生成する
-        this.commentServerClients = msList.map(
-          v => new CommentServerClient(v.addr, v.port, v.thread)
-        );
-        this.commentServerClients.forEach(v => {
-          // 接続しに行く
-          // コールバックの登録もする
-          v.connect(chatData => {
-            const chat = this.pushChatData(chatData);
-            // 拡張機能が起動したあとに受信したコメントのみハンドリングする
-            if (this.appStartDate <= chat.date) {
-              this.onReceiveHandlers.forEach(handler => {
-                // コールバックの呼び出し
-                handler(chat);
-              });
-            }
-          });
+    // 配信者かどうか
+    this.isBroadcaster = nicoLiveData.user.isBroadcaster;
+    if (this.isBroadcaster) {
+      // 配信者の場合はAPIから全てのコメントサーバーの情報を取得する
+      const msList = await LiveGetThreadsClient.fetch(liveId);
+      this.threads = msList.map(v => new ThreadStore({ threadId: v.thread }));
+      // メッセージサーバーの一覧からコメントサーバーに接続するための情報を生成する
+      this.commentServerClients = msList.map(
+        v => new CommentServerClient(v.addr, v.port, v.thread)
+      );
+      this.commentServerClients.forEach(v => {
+        // 接続しに行く
+        // コールバックの登録もする
+        v.connect(chatData => {
+          const chat = this.pushChatData(chatData);
+          // 拡張機能が起動したあとに受信したコメントのみハンドリングする
+          if (this.appStartDate <= chat.date) {
+            this.onReceiveHandlers.forEach(handler => {
+              // コールバックの呼び出し
+              handler(chat);
+            });
+          }
         });
-      }
+      });
     }
   }
 

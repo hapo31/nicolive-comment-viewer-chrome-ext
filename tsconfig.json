@@ -7,7 +7,6 @@
     "strict": true,
     "sourceMap": true,
     "noUnusedParameters": true,
-    "noUnusedLocals": true,
     "noEmitHelpers": true,
     "importHelpers": true,
     "experimentalDecorators": true
