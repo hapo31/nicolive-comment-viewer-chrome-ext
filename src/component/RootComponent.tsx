@@ -1,7 +1,7 @@
 import * as React from "react";
 import CommentViewerStore from "../store/CommentViewerStore";
 import { Provider } from "mobx-react";
-import CommentViewer from "./CommentViewer";
+import CommentViewer from "./CommentViewerComponent";
 
 const store = new CommentViewerStore();
 
