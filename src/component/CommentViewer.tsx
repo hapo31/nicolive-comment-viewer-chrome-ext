@@ -19,18 +19,17 @@ export default class CommentViewer extends React.Component<{
     if (!this.props.commentViewer) {
       return <div>NowLoading...</div>;
     }
-
     return (
       <>
         <div>コメビュの領域↓</div>
-        {this.props.commentViewer.threads.map(thread => {
+        {this.props.commentViewer.threadList.map(thread => {
           return (
             <div>
-              ThreadID: {thread.id}
+              ThreadID: {thread.threadId}
               {thread.chatList.map(v => {
                 return (
                   <div>
-                    No:{v.commentNo} {v.content}
+                    No:{v.commentNo} {v.userId} {v.content}
                   </div>
                 );
               })}

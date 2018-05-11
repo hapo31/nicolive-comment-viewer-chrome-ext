@@ -12,20 +12,7 @@ export type ChatData = {
   vpos: number;
 };
 
-export class Thread {
-  public readonly id: number;
-  public chatList: Chat[] = [];
-
-  constructor(threadId: number) {
-    this.id = threadId;
-  }
-
-  public pushChatData(data: ChatData) {
-    this.chatList.push(new Chat(data));
-  }
-}
-
-class Chat {
+export class Chat {
   public readonly content: string;
   public readonly date: Date;
   public readonly locale: string;
@@ -37,7 +24,7 @@ class Chat {
 
   constructor(data: ChatData) {
     this.content = data.content;
-    this.date = new Date(data.date);
+    this.date = new Date(data.date * 1000 + data.date_usec / 1000);
     this.locale = data.locale;
     this.is184 = data.anonymity === 1;
     this.commentNo = data.no;
