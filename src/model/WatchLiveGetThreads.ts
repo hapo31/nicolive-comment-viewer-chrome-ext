@@ -1,4 +1,7 @@
-export default class WatchGetPlayerStatusClient {
+/**
+ * watch.* で始まる
+ */
+export default class WatchLiveGetThreads {
   static async fetch(liveId: string) {
     return new Promise<MessageServerInfo[]>((resolve, reject) => {
       const xhr = new XMLHttpRequest();
