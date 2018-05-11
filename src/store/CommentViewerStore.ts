@@ -1,7 +1,7 @@
 import { observable, action, computed } from "mobx";
 import { Chat, ChatData } from "../model/Chat";
 import CommentServerClient from "../model/CommentServerClient";
-import LiveGetPlayerStatusClient from "../model/LiveGetPlayerStatusClient";
+import LiveGetThreadsClient from "../model/LiveGetThreadsClient";
 import nicoLiveData from "../model/NicoLiveData";
 import ICommentServerClient from "../model/ICommentServerClient";
 import ThreadStore from "./ThreadStore";
@@ -36,7 +36,7 @@ export default class CommentViewerStore {
       this.isBroadcaster = nicoLiveData.user.isBroadcaster;
       if (this.isBroadcaster) {
         // 配信者の場合はAPIから全てのコメントサーバーの情報を取得する
-        const msList = await LiveGetPlayerStatusClient.fetch(liveId);
+        const msList = await LiveGetThreadsClient.fetch(liveId);
         this.threads = msList.map(v => new ThreadStore({ threadId: v.thread }));
         // メッセージサーバーの一覧からコメントサーバーに接続するための情報を生成する
         this.commentServerClients = msList.map(
