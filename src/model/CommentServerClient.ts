@@ -1,4 +1,6 @@
 import { ChatData } from "./Chat";
+import NicoLiveThreadRequest from "./NicoLiveThreadRequest";
+import nicoLiveData from "./NicoLiveData";
 
 export default class CommentServerClient implements CommentServerClient {
   private retryCount = 0;
@@ -9,15 +11,19 @@ export default class CommentServerClient implements CommentServerClient {
   ) {}
 
   public connect = (callback: (data: ChatData) => void) => {
-    const conn = new WebSocket(`ws://${this.addr}:${this.port}/websocket`);
+    const conn = new WebSocket(`ws://${this.addr}:${this.port}/websocket`, [
+      "msg.nicovideo.jp#json"
+    ]);
     conn.onopen = _ => {
+      const userId = nicoLiveData.user.id;
       this.retryCount = 0;
       console.log(`コメントサーバーに接続しました。`);
+      conn.send(NicoLiveThreadRequest.createPayload(this.threadId, userId));
     };
     conn.onmessage = e => {
-      console.log(e.data);
-      if (e.data.chat) {
-        callback(e.data.chat);
+      const { chat } = JSON.parse(e.data);
+      if (chat) {
+        callback(chat);
       }
     };
 
