@@ -1,5 +1,6 @@
 /**
- * watch.* で始まる
+ * watch.* で始まるgetthreadsAPIからスレッド情報を取得する
+ * CORSの関係で視聴ページからは叩くことが出来ない
  */
 export default class WatchLiveGetThreads {
   static async fetch(liveId: string) {
