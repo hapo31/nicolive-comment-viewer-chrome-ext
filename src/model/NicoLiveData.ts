@@ -1,5 +1,7 @@
 import NicoliveEmbeddedData from "./NicoliveEmbeddedData";
-
+/**
+ * 配信ページに埋め込まれているデータを取得して保持する
+ */
 class NicoLiveData {
   public nicoliveEmbeddedData?: NicoliveEmbeddedData;
 
@@ -15,4 +17,5 @@ class NicoLiveData {
 }
 
 const nicoLiveData = new NicoLiveData("embedded-data").nicoliveEmbeddedData!;
+
 export default nicoLiveData;
