@@ -3,6 +3,13 @@ import CommentViewerStore from "../store/CommentViewerStore";
 import { inject, observer } from "mobx-react";
 import ThreadComponent from "./ThreadComponent";
 import YomiageSkeltonComponent from "./YomiageSkelton";
+import * as styled from "styled-components";
+
+const defaultStyle = styled.default;
+
+const CommentViewerRoot = defaultStyle.div`
+  background-color: #fff;
+`;
 
 @inject("commentViewer")
 @observer
@@ -28,10 +35,15 @@ export default class CommentViewer extends React.Component<
       return <div>NowLoading...</div>;
     }
     return (
-      <>
+      <CommentViewerRoot>
         <div>コメビュの領域↓</div>
         {this.props.commentViewer.threadList.map(thread => {
-          return <ThreadComponent threadStore={thread} />;
+          return (
+            <>
+              Thread ID: {thread.threadId}
+              <ThreadComponent threadStore={thread} />
+            </>
+          );
         })}
         {(() => {
           if (this.state && this.state.yomiageSkeltonComponent) {
@@ -39,12 +51,12 @@ export default class CommentViewer extends React.Component<
           }
           return null;
         })()}
-      </>
+      </CommentViewerRoot>
     );
   }
 
-  onReceiveChat = (chat: { comment?: string }) => {
-    if (chat.comment) {
+  private onReceiveChat = (chat: { comment?: string; isCommand?: boolean }) => {
+    if (chat.comment && !chat.isCommand) {
       this.setState({
         yomiageSkeltonComponent: (
           <YomiageSkeltonComponent message={chat.comment} />
