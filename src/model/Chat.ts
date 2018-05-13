@@ -6,7 +6,7 @@ export type ChatData = {
   locale: string;
   mail: string;
   no: number;
-  premium: 0 | 1;
+  premium?: 1 | 2;
   thread: number;
   user_id: string;
   vpos: number;
@@ -18,9 +18,10 @@ export class Chat {
   public readonly locale: string;
   public readonly is184: boolean;
   public readonly commentNo: number;
-  public readonly isPremium: boolean;
   public readonly userId: string;
   public readonly vPos: number;
+
+  private readonly premium?: 1 | 2 | 3;
 
   constructor(data: ChatData) {
     this.comment = data.content;
@@ -28,8 +29,20 @@ export class Chat {
     this.locale = data.locale;
     this.is184 = data.anonymity === 1;
     this.commentNo = data.no;
-    this.isPremium = data.premium === 1;
+    this.premium = data.premium;
     this.userId = data.user_id;
     this.vPos = data.vpos;
+  }
+
+  public get isOperator() {
+    return this.premium != null && this.premium === 3;
+  }
+
+  public get isCommand() {
+    return this.premium != null && this.premium === 2;
+  }
+
+  public get isPremium() {
+    return this.premium != null && this.premium === 1;
   }
 }
