@@ -9,8 +9,12 @@
                 "http://live.nicovideo.jp/watch/*",
                 "http://live2.nicovideo.jp/watch/*"
             ],
-            "js": ["script.js"]
+            "js": ["loader.js"],
+            "run_at": "document_start"
         }
+    ],
+    "web_accessible_resources": [
+      "script.js"
     ],
     "permissions": [
     ]

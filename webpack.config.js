@@ -6,10 +6,11 @@ const isDev = process.env.NODE_ENV !== "production";
 
 module.exports = {
   entry: {
-    app: path.join(__dirname, "./src/index.tsx")
+    script: path.join(__dirname, "./src/index.tsx"),
+    loader: path.join(__dirname, "./src/loader.ts")
   },
   output: {
-    filename: "script.js",
+    filename: "[name].js",
     path: isDev ? path.join(__dirname, "debug") : path.join(__dirname, "extension")
   },
   module: {
