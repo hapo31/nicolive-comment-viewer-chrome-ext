@@ -8,7 +8,7 @@ const defaultStyle = styled.default;
 const ThreadView = styled.default.div`
 max-height: 300px;
 overflow-y: auto;
-overflow-x: hidden;
+overflow-x: auto;
 border-radius: 5px;
 border: 1px solid #ddd;
 `;
@@ -55,7 +55,8 @@ export default class ThreadComponent extends React.Component<{
             >
               <Grid width={5}>{v.commentNo}</Grid>
               <Grid width={10}>{v.userId}</Grid>
-              <Grid width={80}>{v.comment}</Grid>
+              <Grid width={75}>{v.comment}</Grid>
+              <Grid width={5}>{v.dateStr}</Grid>
             </CommentGridView>
           );
         })}

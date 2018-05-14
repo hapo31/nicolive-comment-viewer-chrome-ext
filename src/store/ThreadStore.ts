@@ -26,7 +26,7 @@ export default class ThreadStore {
     this.timer = window.setTimeout(() => {
       this.chatList = this.chatList
         .concat(this.chatListCache)
-        .sort((a, b) => b.commentNo - a.commentNo);
+        .sort((a, b) => b.commentNo != null ? b.commentNo - a.commentNo : b.date.getTime() - a.date.getTime());
       this.chatListCache = [];
       this.timer = 0;
     }, 500);

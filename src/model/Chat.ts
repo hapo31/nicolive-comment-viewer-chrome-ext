@@ -45,4 +45,10 @@ export class Chat {
   public get isPremium() {
     return this.premium != null && this.premium === 1;
   }
+
+  public get dateStr() {
+    return `${`0${this.date.getHours()}`.slice(
+      -2
+    )}:${`0${this.date.getMinutes()}`.slice(-2)}`;
+  }
 }
