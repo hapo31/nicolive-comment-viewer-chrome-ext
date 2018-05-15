@@ -51,7 +51,7 @@ export default class ThreadComponent extends React.Component<{
             <CommentGridView
               className="Comment"
               isOperator={v.isOperator || v.isCommand}
-              key={`${v.commentNo}_${v.userId}`}
+              key={`${v.date.getTime()}_${v.userId}`}
             >
               <Grid width={5}>{v.commentNo}</Grid>
               <Grid width={10}>{v.userId}</Grid>

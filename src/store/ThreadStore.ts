@@ -29,7 +29,7 @@ export default class ThreadStore {
         .sort((a, b) => b.commentNo != null ? b.commentNo - a.commentNo : b.date.getTime() - a.date.getTime());
       this.chatListCache = [];
       this.timer = 0;
-    }, 500);
+    }, 100);
   }
 
   public get lastChat() {
