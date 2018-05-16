@@ -3,10 +3,12 @@ import { inject, observer } from "mobx-react";
 import ThreadStore from "../store/ThreadStore";
 import * as styled from "styled-components";
 
+const MIN_COMMENT_GRID_COUNT = 13;
+
 const defaultStyle = styled.default;
 
 const ThreadView = styled.default.div`
-max-height: 300px;
+height: 300px;
 overflow-y: auto;
 overflow-x: auto;
 border-radius: 5px;
@@ -51,7 +53,7 @@ export default class ThreadComponent extends React.Component<{
             <CommentGridView
               className="Comment"
               isOperator={v.isOperator || v.isCommand}
-              key={`${v.date.getTime()}_${v.userId}`}
+              key={v.uniqueKey}
             >
               <Grid width={5}>{v.commentNo}</Grid>
               <Grid width={10}>{v.userId}</Grid>
@@ -60,7 +62,26 @@ export default class ThreadComponent extends React.Component<{
             </CommentGridView>
           );
         })}
+        {(() => {
+          // コメントの数が縦幅に満たない場合は何も表示されていないグリッドを表示
+          if (thread.chatList.length < MIN_COMMENT_GRID_COUNT) {
+            return this.craeteSkeltonCommentGrid(
+              MIN_COMMENT_GRID_COUNT - thread.chatList.length
+            );
+          }
+        })()}
       </ThreadView>
     );
+  }
+
+  private craeteSkeltonCommentGrid(count: number) {
+    return new Array(count).fill(0).map((_, i) => (
+      <CommentGridView className="Comment-empty" isOperator={false} key={i}>
+        <Grid width={5}>&nbsp;&nbsp;</Grid>
+        <Grid width={10}>&nbsp;&nbsp;</Grid>
+        <Grid width={75}>&nbsp;&nbsp;</Grid>
+        <Grid width={5}>&nbsp;&nbsp;</Grid>
+      </CommentGridView>
+    ));
   }
 }

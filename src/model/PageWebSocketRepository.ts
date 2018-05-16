@@ -1,13 +1,17 @@
+type OnPushWebSocketHandler = ((ws: WebSocket) => void);
+
 class WebSocketRepository {
   private websockets: WebSocket[] = [];
 
-  public onPushWebSocket?: (ws: WebSocket) => void;
+  private onPushWebSocketHandlers: OnPushWebSocketHandler[] = [];
 
   public addWebSocket(websocket: WebSocket) {
     this.websockets.push(websocket);
-    if (this.onPushWebSocket != null) {
-      this.onPushWebSocket(websocket);
-    }
+    this.onPushWebSocketHandlers.forEach(handler => handler(websocket));
+  }
+
+  public addOnPushWebSocketEventHandler(handler: OnPushWebSocketHandler) {
+    this.onPushWebSocketHandlers.push(handler);
   }
 
   public get sockets() {

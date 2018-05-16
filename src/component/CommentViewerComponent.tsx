@@ -11,6 +11,11 @@ const CommentViewerRoot = defaultStyle.div`
   background-color: #fff;
 `;
 
+const RoomName = defaultStyle.div`
+  font-weight: bold;
+  font-size: 20px;
+`;
+
 @inject("commentViewer")
 @observer
 export default class CommentViewer extends React.Component<
@@ -36,11 +41,10 @@ export default class CommentViewer extends React.Component<
     }
     return (
       <CommentViewerRoot>
-        <div>コメビュの領域↓</div>
         {this.props.commentViewer.threadList.map(thread => {
           return (
             <>
-              Thread ID: {thread.threadId}
+              <RoomName>{thread.roomName}</RoomName>
               <ThreadComponent threadStore={thread} />
             </>
           );

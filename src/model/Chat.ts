@@ -21,6 +21,7 @@ export class Chat {
   public readonly userId: string;
   public readonly vPos: number;
 
+  private readonly internalId: string;
   private readonly premium?: 1 | 2 | 3;
 
   constructor(data: ChatData) {
@@ -32,6 +33,12 @@ export class Chat {
     this.premium = data.premium;
     this.userId = data.user_id;
     this.vPos = data.vpos;
+    this.internalId = Math.random()
+      .toString(36)
+      .slice(-10);
+  }
+  public get isNormalMember() {
+    return this.premium == null;
   }
 
   public get isOperator() {
@@ -50,5 +57,9 @@ export class Chat {
     return `${`0${this.date.getHours()}`.slice(
       -2
     )}:${`0${this.date.getMinutes()}`.slice(-2)}`;
+  }
+
+  public get uniqueKey() {
+    return `${this.commentNo}_${this.internalId}_${this.userId}`;
   }
 }

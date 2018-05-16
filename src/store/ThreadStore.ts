@@ -3,7 +3,12 @@ import { Chat, ChatData } from "../model/Chat";
 
 export default class ThreadStore {
   @observable public threadId: number = 0;
+  @observable public rawChatList: Chat[] = [];
   @observable public chatList: Chat[] = [];
+  @observable public roomName: string = "-";
+
+  @observable public showCommand = true;
+  @observable public showOperatorComment = true;
 
   private chatListCache: Chat[] = [];
   private timer: number = 0;
@@ -26,7 +31,23 @@ export default class ThreadStore {
     this.timer = window.setTimeout(() => {
       this.chatList = this.chatList
         .concat(this.chatListCache)
-        .sort((a, b) => b.commentNo != null ? b.commentNo - a.commentNo : b.date.getTime() - a.date.getTime());
+        .filter(chat => this.testCommentFilter(chat))
+        .sort(
+          (a, b) =>
+            b.commentNo != null
+              ? b.commentNo - a.commentNo
+              : b.date.getTime() - a.date.getTime()
+        );
+
+      this.rawChatList = this.rawChatList
+        .concat(this.chatListCache)
+        .sort(
+          (a, b) =>
+            b.commentNo != null
+              ? b.commentNo - a.commentNo
+              : b.date.getTime() - a.date.getTime()
+        );
+
       this.chatListCache = [];
       this.timer = 0;
     }, 100);
@@ -36,5 +57,13 @@ export default class ThreadStore {
     return this.chatListCache.length !== 0
       ? this.chatListCache[this.chatListCache.length - 1]
       : null;
+  }
+
+  private testCommentFilter(chat: Chat) {
+    return (
+      chat.isNormalMember ||
+      chat.isCommand !== this.showCommand ||
+      chat.isOperator !== this.showOperatorComment
+    );
   }
 }

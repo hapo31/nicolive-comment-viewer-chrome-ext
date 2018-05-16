@@ -5,6 +5,8 @@ import LiveGetThreadsClient from "../model/LiveGetThreadsClient";
 import nicoLiveData from "../model/NicoLiveData";
 import ICommentServerClient from "../model/ICommentServerClient";
 import ThreadStore from "./ThreadStore";
+import RoomInfomationClient from "../model/RoomInfomationClient";
+import { CommandType } from "../model/AudienceMessage";
 
 export type OnReceiveHanlder = (chatData: Partial<Chat>) => void;
 
@@ -14,6 +16,7 @@ export default class CommentViewerStore {
   @observable public appStartDate: Date = new Date();
 
   private commentServerClient: CommentServerClient = new CommentServerClient();
+  private roomInformationClient: RoomInfomationClient = new RoomInfomationClient();
   private onReceiveHandlers: OnReceiveHanlder[] = [];
 
   constructor(prop?: Partial<CommentViewerStore>) {
@@ -38,6 +41,34 @@ export default class CommentViewerStore {
         const liveId = this.getLiveId();
         const msList = await LiveGetThreadsClient.fetch(liveId);
         this.threads = msList.map(v => new ThreadStore({ threadId: v.thread }));
+      } else {
+        // 視聴者の場合は部屋情報が取得されるまで待つ
+        this.roomInformationClient.observe(info => {
+          if (
+            info.type === "watch" &&
+            info.body.command === CommandType.CURRENTROOM
+          ) {
+            const { room } = info.body;
+            // まだ一つもコメントを受信していなければ、メッセージからデータを取得
+            if (this.threads.length === 0) {
+              console.log("create room:" + room.roomName);
+              this.threads = [
+                new ThreadStore({
+                  threadId: parseInt(room.threadId, 10),
+                  roomName: room.roomName
+                })
+              ];
+            } else {
+              const threadId = parseInt(room.threadId, 10);
+              const index = this.threads.findIndex(
+                thread => thread.threadId === threadId
+              );
+              // （タイミング的に無いと思うけど）すでにスレッド情報が作られていればそのスレッドに名前を割り当てる
+              this.threads[index].roomName = room.roomName;
+            }
+            this.roomInformationClient.dispose();
+          }
+        });
       }
     }
     // コールバックの登録
@@ -78,6 +109,7 @@ export default class CommentViewerStore {
       thread.pushChatData(chatData);
       return thread.lastChat!;
     } else {
+      console.log("create thread:" + chatData.thread);
       // 見つからなかった場合は新たにスレッドを作成
       const thread = new ThreadStore({ threadId: chatData.thread });
       thread.pushChatData(chatData);
