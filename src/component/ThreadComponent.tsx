@@ -8,9 +8,11 @@ const MIN_COMMENT_GRID_COUNT = 13;
 const defaultStyle = styled.default;
 
 const ThreadView = styled.default.div`
-
+height: 300px;
 overflow-y: auto;
 overflow-x: auto;
+border-radius: 5px;
+border: 1px solid #ddd;
 `;
 
 const CommentGridView = defaultStyle.div`

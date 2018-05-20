@@ -9,7 +9,6 @@ const defaultStyle = styled.default;
 
 const CommentViewerRoot = defaultStyle.div`
   background-color: #fff;
-  height: 300px;
   border-radius: 5px;
   border: 1px solid #ddd;
 `;
@@ -48,9 +47,7 @@ export default class CommentViewer extends React.Component<
           return (
             <>
               <RoomName>{thread.roomName}</RoomName>
-              <Provider threadStore={thread}>
-                <ThreadComponent />
-              </Provider>
+              <ThreadComponent threadStore={thread} />
             </>
           );
         })}

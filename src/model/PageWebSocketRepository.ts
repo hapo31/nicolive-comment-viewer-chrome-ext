@@ -1,25 +1,33 @@
 type OnPushWebSocketHandler = ((ws: WebSocket) => void);
+type OnChangeWebSocketHandler = ((ws: WebSocket) => void);
 
 class WebSocketRepository {
   private websockets: WebSocket[] = [];
 
   private onPushWebSocketHandlers: OnPushWebSocketHandler[] = [];
 
-  public addWebSocket(websocket: WebSocket) {
-    // if (
-    //   this.websockets.length > 0 &&
-    //   this.websockets.findIndex(ws => ws.url === websocket.url) >= 0
-    // ) {
-    //   debugger;
-    //   return;
-    // }
+  private onChangeWebsocketHandlers: OnChangeWebSocketHandler[] = [];
 
-    this.websockets.push(websocket);
-    this.onPushWebSocketHandlers.forEach(handler => handler(websocket));
+  public addWebSocket(websocket: WebSocket) {
+    const sameUrlSocketIndex = this.websockets.findIndex(
+      ws => ws.url === websocket.url
+    );
+    if (sameUrlSocketIndex >= 0) {
+      const ws = this.sockets[sameUrlSocketIndex];
+      this.onChangeWebsocketHandlers.forEach(handler => handler(ws));
+      this.websockets[sameUrlSocketIndex] = websocket;
+    } else {
+      this.websockets.push(websocket);
+      this.onPushWebSocketHandlers.forEach(handler => handler(websocket));
+    }
   }
 
   public addOnPushWebSocketEventHandler(handler: OnPushWebSocketHandler) {
     this.onPushWebSocketHandlers.push(handler);
+  }
+
+  public addOnChangeWebSocketEventHandler(handler: OnChangeWebSocketHandler) {
+    this.onChangeWebsocketHandlers.push(handler);
   }
 
   public get sockets() {
@@ -27,5 +35,12 @@ class WebSocketRepository {
   }
 }
 
-const websocketRepository = new WebSocketRepository();
+// 違うスクリプト間で同じオブジェクトを参照するため、windowにオブジェクトを差し込む
+if ((window as any).__WebSocketRepository__instance__ == null) {
+  (window as any).__WebSocketRepository__instance__ = new WebSocketRepository();
+}
+
+const websocketRepository: WebSocketRepository = (window as any)
+  .__WebSocketRepository__instance__;
+
 export default websocketRepository;

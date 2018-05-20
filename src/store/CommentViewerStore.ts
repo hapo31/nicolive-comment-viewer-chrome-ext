@@ -1,4 +1,4 @@
-import { observable, action, computed, toJS } from "mobx";
+import { observable, action, computed, toJS, runInAction } from "mobx";
 import { Chat, ChatData } from "../model/Chat";
 import CommentServerClient from "../model/CommentServerClient";
 import LiveGetThreadsClient from "../model/LiveGetThreadsClient";
@@ -6,7 +6,7 @@ import nicoLiveData from "../model/NicoLiveData";
 import ICommentServerClient from "../model/ICommentServerClient";
 import ThreadStore from "./ThreadStore";
 import RoomInfomationClient from "../model/RoomInfomationClient";
-import { CommandType } from "../model/AudienceMessage";
+import { CommandType, AudienceMessage } from "../model/AudienceMessage";
 import CancelableTimeout from "../model/CancelableTimeout";
 
 export type OnReceiveHanlder = (chatData: Partial<Chat>) => void;
@@ -26,7 +26,7 @@ export default class CommentViewerStore {
     }
   }
 
-  @action
+  @action.bound
   public async connectMessageServer() {
     // 配信者かどうか
     const embeddedData = nicoLiveData.embeddedData;
@@ -42,67 +42,20 @@ export default class CommentViewerStore {
     } else {
       // 一定時間部屋情報が取得出来なかった場合、もう一度送信を試みる
       const timeout = new CancelableTimeout(() => {
-        this.roomInformationClient.sendMessage();
+        // this.roomInformationClient.sendMessage();
         console.log("room info timed out. send message");
       }, 5000);
 
       // 視聴者の場合は部屋情報が取得されるまで待つ
       this.roomInformationClient.observe(info => {
-        if (
-          info.type === "watch" &&
-          info.body.command === CommandType.CURRENTROOM
-        ) {
-          const { room } = info.body;
-          // まだ一つもコメントを受信していなければ、メッセージからデータを取得
-          if (this.threadStoreList.length === 0) {
-            console.log("create room:" + room.roomName);
-            // TODO: たぶんここの扱いがまずいんだと思うのでThreadStoreを修正する
-            this.threadStoreList = [
-              new ThreadStore({
-                threadId: parseInt(room.threadId, 10),
-                roomName: room.roomName
-              })
-            ];
-          } else {
-            console.log("assign room: " + room.roomName);
-            const threadId = parseInt(room.threadId, 10);
-            const index = this.threadStoreList.findIndex(
-              thread => thread.threadId === threadId
-            );
-            // （タイミング的に無いと思うけど）すでにスレッド情報が作られていればそのスレッドに名前を割り当てる
-            this.threadStoreList[index].roomName = room.roomName;
-          }
-          this.roomInformationClient.dispose();
-          timeout.cancel();
-          console.log("room info acquired");
-        }
+        this.roomInfoObserver(info);
       });
     }
 
     // コールバックの登録
     this.commentServerClient.observe(chatData => {
-      const chat = this.pushChatData(chatData);
-      // 拡張機能が起動したあとに受信したコメントのみハンドリングする
-      if (this.appStartDate <= chat.date) {
-        this.onReceiveHandlers.forEach(handler => {
-          // コールバックの呼び出し
-          handler(chat);
-        });
-      }
+      this.commentObserver(chatData);
     });
-  }
-
-  public addOnReceiveHandler(handler: OnReceiveHanlder) {
-    this.onReceiveHandlers.push(handler);
-  }
-
-  public removeOnReceiveHandler(handler: OnReceiveHanlder) {
-    const index = this.onReceiveHandlers.findIndex(
-      instance => instance === handler
-    );
-    if (index >= 0) {
-      this.onReceiveHandlers.splice(index, 1);
-    }
   }
 
   @action.bound
@@ -125,8 +78,64 @@ export default class CommentViewerStore {
     }
   }
 
+  public addOnReceiveHandler(handler: OnReceiveHanlder) {
+    this.onReceiveHandlers.push(handler);
+  }
+
+  public removeOnReceiveHandler(handler: OnReceiveHanlder) {
+    const index = this.onReceiveHandlers.findIndex(
+      instance => instance === handler
+    );
+    if (index >= 0) {
+      this.onReceiveHandlers.splice(index, 1);
+    }
+  }
+
   private getLiveId() {
     const paths = location.href.split("/");
     return paths[paths.length - 1];
+  }
+
+  @action.bound
+  private roomInfoObserver(info: AudienceMessage) {
+    if (
+      info.type === "watch" &&
+      info.body.command === CommandType.CURRENTROOM
+    ) {
+      const { room } = info.body;
+      // まだ一つもコメントを受信していなければ、メッセージからデータを取得
+      if (this.threadStoreList.length === 0) {
+        console.log("create room:" + room.roomName);
+        // TODO: たぶんここの扱いがまずいんだと思うのでThreadStoreを修正する
+        this.threadStoreList = [
+          new ThreadStore({
+            threadId: parseInt(room.threadId, 10),
+            roomName: room.roomName
+          })
+        ];
+      } else {
+        console.log("assign room: " + room.roomName);
+        const threadId = parseInt(room.threadId, 10);
+        const index = this.threadStoreList.findIndex(
+          thread => thread.threadId === threadId
+        );
+        // （タイミング的に無いと思うけど）すでにスレッド情報が作られていればそのスレッドに名前を割り当てる
+        this.threadStoreList[index].roomName = room.roomName;
+      }
+      this.roomInformationClient.dispose();
+      console.log("room info acquired");
+    }
+  }
+
+  @action.bound
+  private commentObserver(chatData: ChatData) {
+    const chat = this.pushChatData(chatData);
+    // 拡張機能が起動したあとに受信したコメントのみハンドリングする
+    if (this.appStartDate <= chat.date) {
+      this.onReceiveHandlers.forEach(handler => {
+        // コールバックの呼び出し
+        handler(chat);
+      });
+    }
   }
 }

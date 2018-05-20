@@ -15,15 +15,21 @@ export default class CommentServerClient {
     // 初期化段階ではまだメッセージサーバーへの接続を開始していない事が多いため、
     // 新たにWebSocketが追加されるタイミングを監視し、
     // そのWebSocketの接続先がコメントサーバーだった場合はイベントリスナを登録するようにする
-    if (sockets.findIndex(ws => ws.url.includes(serverHint)) < 0) {
-      websocketRepository.addOnPushWebSocketEventHandler(ws => {
-        if (ws.url.includes(serverHint)) {
-          ws.addEventListener("message", this.onMessage(callback));
-        }
-      });
-    } else {
-      // コメントサーバーへ接続済みであれば、
-      // メッセージサーバーへ接続しているWebSocketに対して直接イベントリスナを追加する
+    websocketRepository.addOnPushWebSocketEventHandler(ws => {
+      if (ws.url.includes(serverHint)) {
+        ws.addEventListener("message", this.onMessage(callback));
+      }
+    });
+
+    websocketRepository.addOnChangeWebSocketEventHandler(ws => {
+      if (ws.url.includes(serverHint)) {
+        ws.addEventListener("message", this.onMessage(callback));
+      }
+    });
+
+    // コメントサーバーへ接続済みであれば、
+    // メッセージサーバーへ接続しているWebSocketに対して直接イベントリスナを追加する
+    if (sockets.findIndex(ws => ws.url.includes(serverHint)) >= 0) {
       sockets.filter(ws => ws.url.includes(serverHint)).forEach(ws => {
         ws.addEventListener("message", this.onMessage(callback));
       });

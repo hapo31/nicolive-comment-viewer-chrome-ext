@@ -3,14 +3,6 @@ import * as React from "react";
 import { render } from "react-dom";
 import "tslib";
 import RootComponent from "./component/RootComponent";
-// アプリケーションのWebSocketをフックし、生成した全てのWebSocketをRepositoryに保存する
-(window as any).WebSocket = new Proxy(WebSocket, {
-  construct(target: any, args: any[]) {
-    const ws = new target(...args);
-    webSocketRepository.addWebSocket(ws);
-    return ws;
-  }
-});
 
 console.log("ニコ生コメントビューワー ver 0.1");
 
