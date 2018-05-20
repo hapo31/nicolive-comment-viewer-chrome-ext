@@ -48,13 +48,13 @@ export default class CommentViewerStore {
 
       // 視聴者の場合は部屋情報が取得されるまで待つ
       this.roomInformationClient.observe(info => {
-        this.roomInfoObserver(info);
+        this.createThreadFromMessage(info);
       });
     }
 
     // コールバックの登録
     this.commentServerClient.observe(chatData => {
-      this.commentObserver(chatData);
+      this.appendChatData(chatData);
     });
   }
 
@@ -97,7 +97,7 @@ export default class CommentViewerStore {
   }
 
   @action.bound
-  private roomInfoObserver(info: AudienceMessage) {
+  private createThreadFromMessage(info: AudienceMessage) {
     if (
       info.type === "watch" &&
       info.body.command === CommandType.CURRENTROOM
@@ -128,7 +128,7 @@ export default class CommentViewerStore {
   }
 
   @action.bound
-  private commentObserver(chatData: ChatData) {
+  private appendChatData(chatData: ChatData) {
     const chat = this.pushChatData(chatData);
     // 拡張機能が起動したあとに受信したコメントのみハンドリングする
     if (this.appStartDate <= chat.date) {

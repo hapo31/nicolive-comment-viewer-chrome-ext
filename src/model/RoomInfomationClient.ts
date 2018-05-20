@@ -61,14 +61,21 @@ export default class RoomInfomationClient {
     // 初期化段階ではまだメッセージサーバーへの接続を開始していない事が多いため、
     // 新たにWebSocketが追加されるタイミングを監視し、
     // そのWebSocketの接続先がメタデータサーバーだった場合はイベントリスナを登録するようにする
-    if (sockets.findIndex(ws => ws.url.includes(serverHint)) < 0) {
-      websocketRepository.addOnPushWebSocketEventHandler(ws => {
-        if (ws.url.includes(serverHint)) {
-          this.socket = ws;
-          ws.addEventListener("message", this.onMessage);
-        }
-      });
-    } else {
+    websocketRepository.addOnPushWebSocketEventHandler(ws => {
+      if (ws.url.includes(serverHint)) {
+        this.socket = ws;
+        ws.addEventListener("message", this.onMessage);
+      }
+    });
+
+    websocketRepository.addOnChangeWebSocketEventHandler(ws => {
+      if (ws.url.includes(serverHint)) {
+        this.socket = ws;
+        ws.addEventListener("message", this.onMessage);
+      }
+    });
+
+    if (sockets.findIndex(ws => ws.url.includes(serverHint)) >= 0) {
       // メタデータサーバーへ接続済みであれば、
       // メタデータサーバーへ接続しているWebSocketに対して直接イベントリスナを追加する
       sockets.filter(ws => ws.url.includes(serverHint)).forEach(ws => {

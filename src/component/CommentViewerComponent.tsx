@@ -47,7 +47,9 @@ export default class CommentViewer extends React.Component<
           return (
             <>
               <RoomName>{thread.roomName}</RoomName>
-              <ThreadComponent threadStore={thread} />
+              <Provider threadStore={thread}>
+                <ThreadComponent />
+              </Provider>
             </>
           );
         })}
