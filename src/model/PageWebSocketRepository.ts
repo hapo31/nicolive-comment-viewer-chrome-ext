@@ -12,9 +12,9 @@ class WebSocketRepository {
     const sameUrlSocketIndex = this.websockets.findIndex(
       ws => ws.url === websocket.url
     );
+    // 同じURLのWebSocketがあったら更新する
     if (sameUrlSocketIndex >= 0) {
-      const ws = this.sockets[sameUrlSocketIndex];
-      this.onChangeWebsocketHandlers.forEach(handler => handler(ws));
+      this.onChangeWebsocketHandlers.forEach(handler => handler(websocket));
       this.websockets[sameUrlSocketIndex] = websocket;
     } else {
       this.websockets.push(websocket);
