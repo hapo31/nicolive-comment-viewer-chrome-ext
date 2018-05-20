@@ -1,7 +1,7 @@
 import { ChatData } from "./Chat";
 import NicoLiveThreadRequest from "./NicoLiveThreadRequest";
 import nicoLiveData from "./NicoLiveData";
-import pageWebsocketRepository from "./PageWebSocketRepository";
+import websocketRepository from "./PageWebSocketRepository";
 
 type ChatDataHandler = (data: ChatData) => void;
 const serverHint = "msg";
@@ -11,12 +11,12 @@ export default class CommentServerClient {
    * アプリのコメントサーバー接続用WebSocketにイベントリスナを追加する
    */
   public observe = (callback: ChatDataHandler) => {
-    const sockets = pageWebsocketRepository.sockets;
+    const sockets = websocketRepository.sockets;
     // 初期化段階ではまだメッセージサーバーへの接続を開始していない事が多いため、
     // 新たにWebSocketが追加されるタイミングを監視し、
     // そのWebSocketの接続先がコメントサーバーだった場合はイベントリスナを登録するようにする
     if (sockets.findIndex(ws => ws.url.includes(serverHint)) < 0) {
-      pageWebsocketRepository.addOnPushWebSocketEventHandler(ws => {
+      websocketRepository.addOnPushWebSocketEventHandler(ws => {
         if (ws.url.includes(serverHint)) {
           ws.addEventListener("message", this.onMessage(callback));
         }

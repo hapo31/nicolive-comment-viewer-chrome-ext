@@ -42,11 +42,11 @@ export class Chat {
   }
 
   public get isOperator() {
-    return this.premium != null && this.premium === 3;
+    return this.premium != null && this.premium === 2;
   }
 
   public get isCommand() {
-    return this.premium != null && this.premium === 2;
+    return this.premium != null && this.premium === 3;
   }
 
   public get isPremium() {
