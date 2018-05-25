@@ -18,22 +18,21 @@ const RoomName = defaultStyle.div`
   font-size: 20px;
 `;
 
+type Props = {
+  commentViewer?: CommentViewerStore;
+};
+
+type State = {
+  yomiageSkeltonComponent?: JSX.Element;
+};
+
 @inject("commentViewer")
 @observer
-export default class CommentViewer extends React.Component<
-  {
-    commentViewer?: CommentViewerStore;
-  },
-  {
-    yomiageSkeltonComponent?: JSX.Element;
-  }
-> {
-  componentWillMount() {
+export default class CommentViewer extends React.Component<Props, State> {
+  componentDidMount() {
     if (!this.props.commentViewer) {
       return;
     }
-
-    this.props.commentViewer.connectMessageServer();
     this.props.commentViewer.addOnReceiveHandler(this.onReceiveChat);
   }
 

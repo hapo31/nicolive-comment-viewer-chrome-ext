@@ -7,7 +7,6 @@ import ICommentServerClient from "../model/ICommentServerClient";
 import ThreadStore from "./ThreadStore";
 import RoomInfomationClient from "../model/RoomInfomationClient";
 import { CommandType, AudienceMessage } from "../model/AudienceMessage";
-import CancelableTimeout from "../model/CancelableTimeout";
 
 export type OnReceiveHanlder = (chatData: Partial<Chat>) => void;
 
@@ -40,12 +39,6 @@ export default class CommentViewerStore {
         v => new ThreadStore({ threadId: v.thread })
       );
     } else {
-      // 一定時間部屋情報が取得出来なかった場合、もう一度送信を試みる
-      const timeout = new CancelableTimeout(() => {
-        // this.roomInformationClient.sendMessage();
-        console.log("room info timed out. send message");
-      }, 5000);
-
       // 視聴者の場合は部屋情報が取得されるまで待つ
       this.roomInformationClient.observe(info => {
         this.createThreadFromMessage(info);

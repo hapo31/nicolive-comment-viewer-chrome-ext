@@ -4,6 +4,7 @@ import { Provider } from "mobx-react";
 import CommentViewer from "./CommentViewerComponent";
 
 const store = new CommentViewerStore();
+store.connectMessageServer();
 
 export default class RootComponent extends React.Component {
   render() {
