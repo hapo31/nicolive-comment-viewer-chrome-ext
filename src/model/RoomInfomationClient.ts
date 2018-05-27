@@ -1,6 +1,6 @@
 import { AudienceMessage } from "./AudienceMessage";
-import websocketRepository from "./PageWebSocketRepository";
-import nicoLiveData from "./NicoLiveData";
+import websocketRepository from "../infra/PageWebSocketRepository";
+import nicoLiveData from "../infra/NicoLiveData";
 
 type RoomInfomationMessageHandler = (data: AudienceMessage) => void;
 

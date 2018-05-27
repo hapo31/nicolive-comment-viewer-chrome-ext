@@ -1,9 +1,9 @@
 import { observable, action, computed, toJS, runInAction } from "mobx";
 import { Chat, ChatData } from "../model/Chat";
 import CommentServerClient from "../model/CommentServerClient";
-import LiveGetThreadsClient from "../model/LiveGetThreadsClient";
-import nicoLiveData from "../model/NicoLiveData";
-import ICommentServerClient from "../model/ICommentServerClient";
+import LiveGetThreadsClient from "../infra/LiveGetThreadsClient";
+import nicoLiveData from "../infra/NicoLiveData";
+import ICommentServerClient from "../infra/ICommentServerClient";
 import ThreadStore from "./ThreadStore";
 import RoomInfomationClient from "../model/RoomInfomationClient";
 import { CommandType, AudienceMessage } from "../model/AudienceMessage";

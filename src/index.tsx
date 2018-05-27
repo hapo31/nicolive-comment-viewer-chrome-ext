@@ -1,4 +1,4 @@
-import webSocketRepository from "./model/PageWebSocketRepository";
+import webSocketRepository from "./infra/PageWebSocketRepository";
 import * as React from "react";
 import { render } from "react-dom";
 import "tslib";

@@ -1,7 +1,7 @@
 import { ChatData } from "./Chat";
-import NicoLiveThreadRequest from "./NicoLiveThreadRequest";
-import nicoLiveData from "./NicoLiveData";
-import websocketRepository from "./PageWebSocketRepository";
+import NicoLiveThreadRequest from "../infra/NicoLiveThreadRequest";
+import nicoLiveData from "../infra/NicoLiveData";
+import websocketRepository from "../infra/PageWebSocketRepository";
 
 type ChatDataHandler = (data: ChatData) => void;
 const serverHint = "msg";

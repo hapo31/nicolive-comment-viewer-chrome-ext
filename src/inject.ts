@@ -1,4 +1,4 @@
-import websocketRepository from "./model/PageWebSocketRepository";
+import websocketRepository from "./infra/PageWebSocketRepository";
 
 // アプリケーションのWebSocketをフックし、生成した全てのWebSocketをRepositoryに保存する
 (window as any).WebSocket = new Proxy(WebSocket, {
