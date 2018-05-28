@@ -1,5 +1,5 @@
 import { AudienceMessage } from "./AudienceMessage";
-import websocketRepository from "../infra/PageWebSocketRepository";
+import websocketRepository from "../infra/WebSocketRepository";
 import nicoLiveData from "../infra/NicoLiveData";
 
 type RoomInfomationMessageHandler = (data: AudienceMessage) => void;
