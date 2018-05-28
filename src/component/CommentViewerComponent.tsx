@@ -1,6 +1,6 @@
 import * as React from "react";
 import CommentViewerStore from "../store/CommentViewerStore";
-import { inject, observer } from "mobx-react";
+import { inject, observer, Provider } from "mobx-react";
 import ThreadComponent from "./ThreadComponent";
 import YomiageSkeltonComponent from "./YomiageSkelton";
 import * as styled from "styled-components";
@@ -9,6 +9,8 @@ const defaultStyle = styled.default;
 
 const CommentViewerRoot = defaultStyle.div`
   background-color: #fff;
+  border-radius: 5px;
+  border: 1px solid #ddd;
 `;
 
 const RoomName = defaultStyle.div`
@@ -16,22 +18,21 @@ const RoomName = defaultStyle.div`
   font-size: 20px;
 `;
 
+type Props = {
+  commentViewer?: CommentViewerStore;
+};
+
+type State = {
+  yomiageSkeltonComponent?: JSX.Element;
+};
+
 @inject("commentViewer")
 @observer
-export default class CommentViewer extends React.Component<
-  {
-    commentViewer?: CommentViewerStore;
-  },
-  {
-    yomiageSkeltonComponent?: JSX.Element;
-  }
-> {
-  componentWillMount() {
+export default class CommentViewer extends React.Component<Props, State> {
+  componentDidMount() {
     if (!this.props.commentViewer) {
       return;
     }
-
-    this.props.commentViewer.connectMessageServer();
     this.props.commentViewer.addOnReceiveHandler(this.onReceiveChat);
   }
 
@@ -41,11 +42,13 @@ export default class CommentViewer extends React.Component<
     }
     return (
       <CommentViewerRoot>
-        {this.props.commentViewer.threadList.map(thread => {
+        {this.props.commentViewer.threadStoreList.map(thread => {
           return (
             <>
               <RoomName>{thread.roomName}</RoomName>
-              <ThreadComponent threadStore={thread} />
+              <Provider threadStore={thread}>
+                <ThreadComponent />
+              </Provider>
             </>
           );
         })}

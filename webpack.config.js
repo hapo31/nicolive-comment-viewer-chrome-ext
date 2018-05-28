@@ -7,7 +7,8 @@ const isDev = process.env.NODE_ENV !== "production";
 module.exports = {
   entry: {
     script: path.join(__dirname, "./src/index.tsx"),
-    loader: path.join(__dirname, "./src/loader.ts")
+    loader: path.join(__dirname, "./src/loader.ts"),
+    inject: path.join(__dirname, "./src/inject.ts")
   },
   output: {
     filename: "[name].js",

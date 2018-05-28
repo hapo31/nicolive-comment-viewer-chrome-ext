@@ -1,5 +1,6 @@
-import { observable, action } from "mobx";
-import { Chat, ChatData } from "../model/Chat";
+import { observable, action, runInAction } from "mobx";
+import { Chat } from "../model/Chat";
+import { ChatData } from "../infra/ChatData";
 
 export default class ThreadStore {
   @observable public threadId: number = 0;
@@ -29,27 +30,7 @@ export default class ThreadStore {
     // 起動時などに一気にコメントが追加されると激重になるので、
     // 自前でデータへの反映にthrottleを掛ける
     this.timer = window.setTimeout(() => {
-      this.chatList = this.chatList
-        .concat(this.chatListCache)
-        .filter(chat => this.testCommentFilter(chat))
-        .sort(
-          (a, b) =>
-            b.commentNo != null
-              ? b.commentNo - a.commentNo
-              : b.date.getTime() - a.date.getTime()
-        );
-
-      this.rawChatList = this.rawChatList
-        .concat(this.chatListCache)
-        .sort(
-          (a, b) =>
-            b.commentNo != null
-              ? b.commentNo - a.commentNo
-              : b.date.getTime() - a.date.getTime()
-        );
-
-      this.chatListCache = [];
-      this.timer = 0;
+      this.assignChat();
     }, 100);
   }
 
@@ -65,5 +46,30 @@ export default class ThreadStore {
       chat.isCommand !== this.showCommand ||
       chat.isOperator !== this.showOperatorComment
     );
+  }
+
+  @action.bound
+  private assignChat() {
+    this.chatList = this.chatList
+      .concat(this.chatListCache)
+      .filter(chat => this.testCommentFilter(chat))
+      .sort(
+        (a, b) =>
+          b.commentNo != null
+            ? b.commentNo - a.commentNo
+            : b.date.getTime() - a.date.getTime()
+      );
+
+    this.rawChatList = this.rawChatList
+      .concat(this.chatListCache)
+      .sort(
+        (a, b) =>
+          b.commentNo != null
+            ? b.commentNo - a.commentNo
+            : b.date.getTime() - a.date.getTime()
+      );
+
+    this.chatListCache = [];
+    this.timer = 0;
   }
 }

@@ -1,16 +1,4 @@
-export type ChatData = {
-  anonymity?: 1;
-  content: string;
-  date: number;
-  date_usec: number;
-  locale: string;
-  mail: string;
-  no: number;
-  premium?: 1 | 2;
-  thread: number;
-  user_id: string;
-  vpos: number;
-};
+import { ChatData } from "../infra/ChatData";
 
 export class Chat {
   public readonly comment: string;
@@ -42,11 +30,11 @@ export class Chat {
   }
 
   public get isOperator() {
-    return this.premium != null && this.premium === 3;
+    return this.premium != null && this.premium === 2;
   }
 
   public get isCommand() {
-    return this.premium != null && this.premium === 2;
+    return this.premium != null && this.premium === 3;
   }
 
   public get isPremium() {
