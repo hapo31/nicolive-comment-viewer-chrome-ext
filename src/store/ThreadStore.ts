@@ -1,5 +1,6 @@
 import { observable, action, runInAction } from "mobx";
-import { Chat, ChatData } from "../model/Chat";
+import { Chat } from "../model/Chat";
+import { ChatData } from "../infra/ChatData";
 
 export default class ThreadStore {
   @observable public threadId: number = 0;

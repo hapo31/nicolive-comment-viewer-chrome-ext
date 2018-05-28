@@ -1,12 +1,11 @@
 import { observable, action, computed, toJS, runInAction } from "mobx";
-import { Chat, ChatData } from "../model/Chat";
-import CommentServerClient from "../model/CommentServerClient";
+import { Chat } from "../model/Chat";
 import LiveGetThreadsClient from "../infra/LiveGetThreadsClient";
 import nicoLiveData from "../infra/NicoLiveData";
-import ICommentServerClient from "../infra/ICommentServerClient";
 import ThreadStore from "./ThreadStore";
-import RoomInfomationClient from "../model/RoomInfomationClient";
 import { CommandType, AudienceMessage } from "../model/AudienceMessage";
+import { ChatData } from "../infra/ChatData";
+import webSocketEvent from "../model/WebSocketEvent";
 
 export type OnReceiveHanlder = (chatData: Partial<Chat>) => void;
 
@@ -15,8 +14,6 @@ export default class CommentViewerStore {
   @observable private isBroadcaster: boolean = true;
   @observable public appStartDate: Date = new Date();
 
-  private commentServerClient: CommentServerClient = new CommentServerClient();
-  private roomInformationClient: RoomInfomationClient = new RoomInfomationClient();
   private onReceiveHandlers: OnReceiveHanlder[] = [];
 
   constructor(prop?: Partial<CommentViewerStore>) {
@@ -40,15 +37,13 @@ export default class CommentViewerStore {
       );
     } else {
       // 視聴者の場合は部屋情報が取得されるまで待つ
-      this.roomInformationClient.observe(info => {
-        this.createThreadFromMessage(info);
-      });
-    }
+      const wsEvent = webSocketEvent;
+      wsEvent.addRoomOnMessageHandler(data =>
+        this.createThreadFromMessage(data)
+      );
 
-    // コールバックの登録
-    this.commentServerClient.observe(chatData => {
-      this.appendChatData(chatData);
-    });
+      wsEvent.addChatOnMessageHandler(data => this.pushChatData(data));
+    }
   }
 
   @action.bound
@@ -64,7 +59,10 @@ export default class CommentViewerStore {
       return thread.lastChat!;
     } else {
       // 見つからなかった場合は新たにスレッドを作成
-      const thread = new ThreadStore({ threadId: chatData.thread });
+      const thread = new ThreadStore({
+        roomName: `id: ${chatData.thread}`,
+        threadId: chatData.thread
+      });
       this.threadStoreList.push(thread);
       thread.pushChatData(chatData);
       return thread.lastChat!;
@@ -73,15 +71,6 @@ export default class CommentViewerStore {
 
   public addOnReceiveHandler(handler: OnReceiveHanlder) {
     this.onReceiveHandlers.push(handler);
-  }
-
-  public removeOnReceiveHandler(handler: OnReceiveHanlder) {
-    const index = this.onReceiveHandlers.findIndex(
-      instance => instance === handler
-    );
-    if (index >= 0) {
-      this.onReceiveHandlers.splice(index, 1);
-    }
   }
 
   private getLiveId() {
@@ -115,7 +104,6 @@ export default class CommentViewerStore {
         // （タイミング的に無いと思うけど）すでにスレッド情報が作られていればそのスレッドに名前を割り当てる
         this.threadStoreList[index].roomName = room.roomName;
       }
-      this.roomInformationClient.dispose();
       console.log("room info acquired");
     }
   }
