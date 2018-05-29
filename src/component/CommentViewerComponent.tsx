@@ -42,6 +42,18 @@ export default class CommentViewer extends React.Component<Props, State> {
     }
     return (
       <CommentViewerRoot>
+        <div className="debug-container">
+          ThreadCount:{this.props.commentViewer.threadStoreList.length}
+          <ul>
+            {this.props.commentViewer.threadStoreList.map(thread => (
+              <li>
+                [Room:{thread.roomName}][CommentCount:{
+                  thread.rawChatList.length
+                }][ShowingCount:{thread.chatList.length}]
+              </li>
+            ))}
+          </ul>
+        </div>
         {this.props.commentViewer.threadStoreList.map(thread => {
           return (
             <>
