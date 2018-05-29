@@ -5,7 +5,8 @@
   "author": "happou31 <happo31@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "webpack --config ./webpack.config.js --watch --devtool source-map --mode development --module-bind='svg=react-svg-loader' --module-bind 'ts=ts-loader' --module-bind 'tsx=ts-loader' --resolve-extensions .ts,.tsx,.js,.svg",
+    "start": "npm run watch",
+    "watch": "webpack --config ./webpack.config.js --watch --devtool source-map --mode development --module-bind='svg=react-svg-loader' --module-bind 'ts=ts-loader' --module-bind 'tsx=ts-loader' --resolve-extensions .ts,.tsx,.js,.svg",
     "build": "webpack --config ./webpack.config.js --mode production --module-bind='svg=react-svg-loader' --module-bind 'ts=ts-loader' --module-bind 'tsx=ts-loader' --resolve-extensions .ts,.tsx,.js,.svg",
     "clean": "rm -rf extension & rm -rf debug"
   },
