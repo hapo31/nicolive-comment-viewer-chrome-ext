@@ -2,6 +2,7 @@ import websocketRepository from "../infra/WebSocketRepository";
 import { ChatData } from "../infra/ChatData";
 import { AudienceMessage } from "./AudienceMessage";
 import Queue from "./Queue";
+import WindowInjection from "../infra/WindowInjection";
 
 type ChatMessageHandler = (data: ChatData) => void;
 type RoomMessageHandler = (data: AudienceMessage) => void;
@@ -57,7 +58,8 @@ class WebSocketEvent {
         this.onRoomEvent(e);
       });
     } else if (
-      ws.url.search(/ws:\/\/omsg\d{3}\.live\.nicovideo\.jp\/websocket/) >= 0
+      ws.url.search(/ws:\/\/o?msg\d{3}\.live\.nicovideo\.jp:?\d*\/websocket/) >=
+      0
     ) {
       ws.addEventListener("message", e => {
         this.onChatEvent(e);
@@ -88,11 +90,11 @@ class WebSocketEvent {
   }
 }
 
-if ((window as any).__WebSocketEvent__instance__ == null) {
-  (window as any).__WebSocketEvent__instance__ = new WebSocketEvent();
+const key = "WebSocketEvent";
+if (!WindowInjection.contains(key)) {
+  WindowInjection.setObject(key, new WebSocketEvent());
 }
 
-const webSocketEvent: WebSocketEvent = (window as any)
-  .__WebSocketEvent__instance__;
+const webSocketEvent = WindowInjection.getObject<WebSocketEvent>(key)!;
 
 export default webSocketEvent;
