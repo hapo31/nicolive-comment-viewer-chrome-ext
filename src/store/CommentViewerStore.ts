@@ -6,6 +6,7 @@ import ThreadStore from "./ThreadStore";
 import { CommandType, AudienceMessage } from "../model/AudienceMessage";
 import { ChatData } from "../infra/ChatData";
 import webSocketEvent from "../model/WebSocketEvent";
+import { MessageServerInfo } from "../infra/LiveGetThreadsClient";
 
 export type OnReceiveHanlder = (chatData: Partial<Chat>) => void;
 
@@ -24,26 +25,20 @@ export default class CommentViewerStore {
 
   @action.bound
   public async connectMessageServer() {
-    // 配信者かどうか
-    const embeddedData = nicoLiveData.embeddedData;
-    if (embeddedData != null && embeddedData.user.isBroadcaster) {
-      this.isBroadcaster = embeddedData.user.isBroadcaster;
-
-      // 配信者の場合はAPIから全てのコメントサーバーの情報を取得する
-      const liveId = this.getLiveId();
+    // とりあえず取りに行ってみる
+    const liveId = this.getLiveId();
+    const wsEvent = webSocketEvent;
+    try {
       const msList = await LiveGetThreadsClient.fetch(liveId);
-      this.threadStoreList = msList.map(
-        v => new ThreadStore({ threadId: v.thread })
-      );
-    } else {
-      // 視聴者の場合は部屋情報が取得されるまで待つ
-      const wsEvent = webSocketEvent;
+      this.createThreadFromMessageServerList(msList);
+    } catch (e) {
+      // 視聴者の場合は部屋情報からThread情報を取得するようにする
       wsEvent.addRoomOnMessageHandler(data =>
         this.createThreadFromMessage(data)
       );
-
-      wsEvent.addChatOnMessageHandler(data => this.pushChatData(data));
     }
+    // コメント受信時の処理
+    wsEvent.addChatOnMessageHandler(data => this.pushChatData(data));
   }
 
   @action.bound
@@ -106,6 +101,13 @@ export default class CommentViewerStore {
       }
       console.log("room info acquired");
     }
+  }
+
+  @action.bound
+  private createThreadFromMessageServerList(msList: MessageServerInfo[]) {
+    this.threadStoreList = msList.map(
+      v => new ThreadStore({ threadId: v.thread })
+    );
   }
 
   @action.bound

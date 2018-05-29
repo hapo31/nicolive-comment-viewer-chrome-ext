@@ -2,7 +2,7 @@
  * `live.` から始まるドメインのgetthreadsAPIからコメントスレッドの情報を取得するクラス
  */
 export default class LiveGetThreadsClient {
-  static async fetch(liveId: string) {
+  static async fetch(liveId: string): Promise<MessageServerInfo[]> {
     return new Promise<MessageServerInfo[]>((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.open("GET", `http://live.nicovideo.jp/api/getthreads?v=${liveId}`);
@@ -13,6 +13,11 @@ export default class LiveGetThreadsClient {
             const res = xhr.responseXML;
             if (res) {
               const threadElements = res.querySelectorAll("thread");
+              // リストの長さが0件なら非配信者か非ログインなのでrejectする
+              if (threadElements.length === 0) {
+                reject();
+                return;
+              }
               // thread要素にメッセージサーバーへの情報が格納されているので抽出する
               const msList: MessageServerInfo[] = Array.from(
                 threadElements
