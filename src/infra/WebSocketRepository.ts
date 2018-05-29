@@ -1,3 +1,5 @@
+import WindowInjection from "./WindowInjection";
+
 type OnPushWebSocketHandler = ((ws: WebSocket) => void);
 type OnChangeWebSocketHandler = ((ws: WebSocket) => void);
 
@@ -35,12 +37,15 @@ class WebSocketRepository {
   }
 }
 
+const key = "WebSocketRepository";
+
 // 違うスクリプト間で同じオブジェクトを参照するため、windowにオブジェクトを差し込む
-if ((window as any).__WebSocketRepository__instance__ == null) {
-  (window as any).__WebSocketRepository__instance__ = new WebSocketRepository();
+if (!WindowInjection.contains(key)) {
+  WindowInjection.setObject(key, new WebSocketRepository());
 }
 
-const websocketRepository: WebSocketRepository = (window as any)
-  .__WebSocketRepository__instance__;
+const websocketRepository = WindowInjection.getObject<WebSocketRepository>(
+  key
+)!;
 
 export default websocketRepository;
