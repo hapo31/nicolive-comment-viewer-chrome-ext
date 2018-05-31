@@ -18,8 +18,8 @@ border: 1px solid #ddd;
 const CommentGridView = defaultStyle.div`
 ${(prop: { isOperator?: boolean }) => (prop.isOperator ? "color: red" : "")}
 border-bottom: solid 1px gray;
-height: 20px;
-font-size: 16px;
+height: 22px;
+font-size: 14px;
 `;
 
 const Grid = defaultStyle.div`
@@ -32,7 +32,8 @@ display: inline-block;
 overflow: hidden;
 white-space: nowrap;
 text-overflow: ellipsis;
-padding: 0 5px;
+padding-bottom: 15px;
+padding-left: 3px;
 border-left: solid 1px gray;
 `;
 
@@ -55,7 +56,7 @@ export default class ThreadComponent extends React.Component<{
               isOperator={v.isOperator || v.isCommand}
               key={v.uniqueKey}
             >
-              <Grid width={5}>{v.commentNo}</Grid>
+              <Grid width={5}>{v.commentNo != null ? v.commentNo : <>&nbsp;</>}</Grid>
               <Grid width={10}>{v.userId}</Grid>
               <Grid width={75}>{v.comment}</Grid>
               <Grid width={5}>{v.dateStr}</Grid>
@@ -77,10 +78,10 @@ export default class ThreadComponent extends React.Component<{
   private craeteSkeltonCommentGrid(count: number) {
     return new Array(count).fill(0).map((_, i) => (
       <CommentGridView className="Comment-empty" isOperator={false} key={i}>
-        <Grid width={5}>&nbsp;&nbsp;</Grid>
-        <Grid width={10}>&nbsp;&nbsp;</Grid>
-        <Grid width={75}>&nbsp;&nbsp;</Grid>
-        <Grid width={5}>&nbsp;&nbsp;</Grid>
+        <Grid width={5}>&nbsp;</Grid>
+        <Grid width={10}>&nbsp;</Grid>
+        <Grid width={75}>&nbsp;</Grid>
+        <Grid width={5}>&nbsp;</Grid>
       </CommentGridView>
     ));
   }
