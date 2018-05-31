@@ -3,38 +3,44 @@ import { inject, observer } from "mobx-react";
 import ThreadStore from "../store/ThreadStore";
 import * as styled from "styled-components";
 
+const LINE_HEIGHT = "24px";
+
 const MIN_COMMENT_GRID_COUNT = 13;
 
 const defaultStyle = styled.default;
 
 const ThreadView = styled.default.div`
-height: 300px;
-overflow-y: auto;
-overflow-x: auto;
-border-radius: 5px;
-border: 1px solid #ddd;
+  height: 300px;
+  overflow-y: auto;
+  overflow-x: auto;
+  border-radius: 5px;
+  border: 1px solid #ddd;
 `;
 
 const CommentGridView = defaultStyle.div`
 ${(prop: { isOperator?: boolean }) => (prop.isOperator ? "color: red" : "")}
-border-bottom: solid 1px gray;
-height: 22px;
-font-size: 14px;
+  border-bottom: solid 1px gray;
+  height: ${LINE_HEIGHT};
+  font-size: 14px;
 `;
 
 const Grid = defaultStyle.div`
-${(prop: { width?: number }) => {
-  if (prop.width) {
-    return `width: ${prop.width}%`;
-  }
-}}
-display: inline-block;
-overflow: hidden;
-white-space: nowrap;
-text-overflow: ellipsis;
-padding-bottom: 15px;
-padding-left: 3px;
-border-left: solid 1px gray;
+  ${(prop: { width?: number }) => {
+    if (prop.width) {
+      return `width: ${prop.width}%`;
+    }
+  }}
+  display: inline-block;
+  height: ${LINE_HEIGHT};
+  padding-left: 3px;
+  padding-top: 1px;
+  border-left: solid 1px gray;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+`;
+
+const GridItem = defaultStyle.span`
 `;
 
 @inject("threadStore")
@@ -56,10 +62,20 @@ export default class ThreadComponent extends React.Component<{
               isOperator={v.isOperator || v.isCommand}
               key={v.uniqueKey}
             >
-              <Grid width={5}>{v.commentNo != null ? v.commentNo : <>&nbsp;</>}</Grid>
-              <Grid width={10}>{v.userId}</Grid>
-              <Grid width={75}>{v.comment}</Grid>
-              <Grid width={5}>{v.dateStr}</Grid>
+              <Grid width={5}>
+                <GridItem>
+                  {v.commentNo != null ? v.commentNo : <>&nbsp;</>}
+                </GridItem>
+              </Grid>
+              <Grid width={10}>
+                <GridItem>{v.userId}</GridItem>
+              </Grid>
+              <Grid width={75}>
+                <GridItem>{v.comment}</GridItem>
+              </Grid>
+              <Grid width={5}>
+                <GridItem>{v.dateStr}</GridItem>
+              </Grid>
             </CommentGridView>
           );
         })}
