@@ -10,6 +10,7 @@ const MIN_COMMENT_GRID_COUNT = 13;
 const defaultStyle = styled.default;
 
 const ThreadView = styled.default.div`
+  z-index: 9999;
   height: 300px;
   overflow-y: auto;
   overflow-x: auto;

@@ -38,7 +38,7 @@ export default class CommentViewerStore {
       );
     }
     // コメント受信時の処理
-    wsEvent.addChatOnMessageHandler(data => this.pushChatData(data));
+    wsEvent.addChatOnMessageHandler(data => this.appendChatData(data));
   }
 
   @action.bound
@@ -83,7 +83,6 @@ export default class CommentViewerStore {
       // まだ一つもコメントを受信していなければ、メッセージからデータを取得
       if (this.threadStoreList.length === 0) {
         console.log("create room:" + room.roomName);
-        // TODO: たぶんここの扱いがまずいんだと思うのでThreadStoreを修正する
         this.threadStoreList = [
           new ThreadStore({
             threadId: parseInt(room.threadId, 10),

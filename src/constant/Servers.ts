@@ -1,1 +1,1 @@
-export const BOUYOMI_SERVER = "http://localhost:8080/talk.json";
+export const BOUYOMI_SERVER = "http://localhost:51400/";

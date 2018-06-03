@@ -29,6 +29,11 @@ type State = {
 @inject("commentViewer")
 @observer
 export default class CommentViewer extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {};
+  }
+
   componentDidMount() {
     if (!this.props.commentViewer) {
       return;
@@ -64,12 +69,7 @@ export default class CommentViewer extends React.Component<Props, State> {
             </>
           );
         })}
-        {(() => {
-          if (this.state && this.state.yomiageSkeltonComponent) {
-            return this.state.yomiageSkeltonComponent;
-          }
-          return null;
-        })()}
+        {this.state.yomiageSkeltonComponent}
       </CommentViewerRoot>
     );
   }
