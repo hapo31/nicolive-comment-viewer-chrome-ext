@@ -2,10 +2,12 @@ import webSocketEvent from "./model/WebSocketEvent";
 import websocketRepository from "./infra/WebSocketRepository";
 
 // 一旦pc-watchスクリプトをページから除去する
-// const pcWatchScript = document.querySelector("select[src*=pc-watch]");
-// const pcWatchScriptUrl = pcWatchScript!.getAttribute("src");
-// document.removeChild(pcWatchScript!);
-
+const pcWatchScript = document.querySelector("select[src*=pc-watch]");
+let pcWatchScriptUrl = "";
+if (pcWatchScript) {
+  pcWatchScriptUrl = pcWatchScript.getAttribute("src") || "";
+  document.removeChild(pcWatchScript);
+}
 // アプリケーションのWebSocketをフックし、生成した全てのWebSocketをRepositoryに保存する
 (window as any).WebSocket = new Proxy(WebSocket, {
   construct(target: any, args: any[]) {
@@ -22,10 +24,11 @@ if (chrome) {
     const scriptName = "script.js";
     const scriptElem = document.createElement("script");
     const url = inject.getAttribute("data-script-url");
-    // pcWatchScript!.setAttribute("src", pcWatchScriptUrl!);
     scriptElem.setAttribute("src", url!);
     document.head.appendChild(scriptElem);
     // pc-watchスクリプトを戻す
-    // document.body.appendChild(pcWatchScript!);
+    if (pcWatchScript) {
+      document.body.appendChild(pcWatchScript);
+    }
   }
 }

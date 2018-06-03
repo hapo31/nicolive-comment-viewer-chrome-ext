@@ -4,6 +4,8 @@ import { inject, observer, Provider } from "mobx-react";
 import ThreadComponent from "./ThreadComponent";
 import YomiageSkeltonComponent from "./YomiageSkelton";
 import * as styled from "styled-components";
+import DebuggerContainer from "./DebuggerContainer";
+import Error from "../atom/Error";
 
 const defaultStyle = styled.default;
 
@@ -36,41 +38,34 @@ export default class CommentViewer extends React.Component<Props, State> {
 
   componentDidMount() {
     if (!this.props.commentViewer) {
+      console.error("store not loaded!");
       return;
     }
     this.props.commentViewer.addOnReceiveHandler(this.onReceiveChat);
   }
 
   render() {
-    if (!this.props.commentViewer) {
-      return <div>NowLoading...</div>;
-    }
     return (
-      <CommentViewerRoot>
-        <div className="debug-container">
-          ThreadCount:{this.props.commentViewer.threadStoreList.length}
-          <ul>
-            {this.props.commentViewer.threadStoreList.map(thread => (
-              <li>
-                [Room:{thread.roomName}][CommentCount:{
-                  thread.rawChatList.length
-                }][ShowingCount:{thread.chatList.length}]
-              </li>
-            ))}
-          </ul>
-        </div>
-        {this.props.commentViewer.threadStoreList.map(thread => {
-          return (
-            <>
-              <RoomName>{thread.roomName}</RoomName>
-              <Provider threadStore={thread}>
-                <ThreadComponent />
-              </Provider>
-            </>
-          );
-        })}
-        {this.state.yomiageSkeltonComponent}
-      </CommentViewerRoot>
+      <DebuggerContainer
+        store={this.props.commentViewer}
+        storeLoading={
+          <Error className="Viewer-not-loaded">
+            comment viewer not loaded...
+          </Error>
+        }
+      >
+        <CommentViewerRoot>
+          {this.props.commentViewer!.threadStoreList.map(thread => {
+            return (
+              <>
+                <RoomName>{thread.roomName}</RoomName>
+                <ThreadComponent threadStore={thread} />
+              </>
+            );
+          })}
+          {this.state.yomiageSkeltonComponent}
+        </CommentViewerRoot>
+      </DebuggerContainer>
     );
   }
 

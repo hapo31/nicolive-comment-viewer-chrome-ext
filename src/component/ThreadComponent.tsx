@@ -44,7 +44,6 @@ const Grid = defaultStyle.div`
 const GridItem = defaultStyle.span`
 `;
 
-@inject("threadStore")
 @observer
 export default class ThreadComponent extends React.Component<{
   threadStore?: ThreadStore;
