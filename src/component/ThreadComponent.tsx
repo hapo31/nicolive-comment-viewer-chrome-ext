@@ -2,6 +2,7 @@ import * as React from "react";
 import { inject, observer } from "mobx-react";
 import ThreadStore from "../store/ThreadStore";
 import * as styled from "styled-components";
+import { GridView, Grid } from "../atom/Grid";
 
 const LINE_HEIGHT = "24px";
 
@@ -16,29 +17,6 @@ const ThreadView = styled.default.div`
   overflow-x: auto;
   border-radius: 5px;
   border: 1px solid #ddd;
-`;
-
-const CommentGridView = defaultStyle.div`
-${(prop: { isOperator?: boolean }) => (prop.isOperator ? "color: red" : "")}
-  border-bottom: solid 1px gray;
-  height: ${LINE_HEIGHT};
-  font-size: 14px;
-`;
-
-const Grid = defaultStyle.div`
-  ${(prop: { width?: number }) => {
-    if (prop.width) {
-      return `width: ${prop.width}%`;
-    }
-  }}
-  display: inline-block;
-  height: ${LINE_HEIGHT};
-  padding-left: 3px;
-  padding-top: 1px;
-  border-left: solid 1px gray;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 `;
 
 const GridItem = defaultStyle.span`
@@ -57,26 +35,27 @@ export default class ThreadComponent extends React.Component<{
       <ThreadView className="Thread">
         {thread.chatList.filter((_, i) => i <= 100).map(v => {
           return (
-            <CommentGridView
+            <GridView
               className="Comment"
               isOperator={v.isOperator || v.isCommand}
+              height={LINE_HEIGHT}
               key={v.uniqueKey}
             >
-              <Grid width={5}>
+              <Grid width="5%">
                 <GridItem>
                   {v.commentNo != null ? v.commentNo : <>&nbsp;</>}
                 </GridItem>
               </Grid>
-              <Grid width={10}>
+              <Grid width="10%">
                 <GridItem>{v.userId}</GridItem>
               </Grid>
-              <Grid width={75}>
+              <Grid width="75%">
                 <GridItem>{v.comment}</GridItem>
               </Grid>
-              <Grid width={5}>
+              <Grid width="5%">
                 <GridItem>{v.dateStr}</GridItem>
               </Grid>
-            </CommentGridView>
+            </GridView>
           );
         })}
         {(() => {
@@ -93,12 +72,17 @@ export default class ThreadComponent extends React.Component<{
 
   private craeteSkeltonCommentGrid(count: number) {
     return new Array(count).fill(0).map((_, i) => (
-      <CommentGridView className="Comment-empty" isOperator={false} key={i}>
-        <Grid width={5}>&nbsp;</Grid>
-        <Grid width={10}>&nbsp;</Grid>
-        <Grid width={75}>&nbsp;</Grid>
-        <Grid width={5}>&nbsp;</Grid>
-      </CommentGridView>
+      <GridView
+        className="Comment-empty"
+        isOperator={false}
+        height={LINE_HEIGHT}
+        key={i}
+      >
+        <Grid width="5%">&nbsp;</Grid>
+        <Grid width="10%">&nbsp;</Grid>
+        <Grid width="75%">&nbsp;</Grid>
+        <Grid width="5%">&nbsp;</Grid>
+      </GridView>
     ));
   }
 }
