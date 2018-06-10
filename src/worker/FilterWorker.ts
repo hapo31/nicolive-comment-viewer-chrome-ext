@@ -1,11 +1,11 @@
 import { ChatData } from "../infra/ChatData";
 
-self.onmessage = e => {
+self.addEventListener("message", e => {
+  console.log("onmessage", e);
   if (e.data.indexOf("raw") < 0 && e.data.indexOf("cache") < 0) {
     return;
   }
   const data: WorkerSendMessage = JSON.parse(e.data);
-  console.log({ data: e.data });
   const { raw: chatList, cache: chatListCache, config } = data;
   const result = chatList
     .concat(chatListCache)
@@ -18,7 +18,7 @@ self.onmessage = e => {
     );
 
   self.postMessage(JSON.stringify(result), "gomadango.com");
-};
+});
 
 function testCommentFilter(chat: ChatData, config: WorkerFilterSettings) {
   return (

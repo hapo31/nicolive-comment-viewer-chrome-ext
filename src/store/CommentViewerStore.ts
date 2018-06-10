@@ -50,6 +50,7 @@ export default class CommentViewerStore {
     if (threadIndex >= 0) {
       // 受信データを内部に追加
       const thread = this.threadStoreList[threadIndex];
+      debugger;
       thread.pushChatData(chatData);
       return thread.lastChat!;
     } else {

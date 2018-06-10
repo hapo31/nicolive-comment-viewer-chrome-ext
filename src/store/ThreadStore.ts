@@ -37,7 +37,7 @@ export default class ThreadStore {
     this.timer = window.setTimeout(() => {
       filterWorker
         .postMessage({
-          raw: toJS(this.rawChatList.map(v => v.data)),
+          raw: this.rawChatList.map(v => v.data),
           cache: this.chatListCache,
           config: {
             isShowCommand: this.showCommand,

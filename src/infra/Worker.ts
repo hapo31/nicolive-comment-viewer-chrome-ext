@@ -1,17 +1,24 @@
 import { WorkerSendMessage } from "../worker/FilterWorker";
 import { ChatData } from "./ChatData";
+import Constants from "../constant/constants";
 
 class CommentFilterWorker {
-  private worker = new Worker("worker.js");
+  private worker: Worker;
   private promiseResolve?: (chatList: ChatData[]) => void;
 
   constructor() {
-    this.worker.addEventListener("message", this.onMessage);
+    const srcElem: HTMLScriptElement | null = document.getElementById(
+      Constants.Attribute.WorkerID
+    ) as any;
+    const src = srcElem!.getAttribute(Constants.Attribute.WorkerScriptAttr);
+    this.worker = new Worker(src!);
+    this.worker.onmessage = this.onMessage;
   }
 
-  public postMessage(message: WorkerSendMessage) {
+  public async postMessage(message: WorkerSendMessage) {
     return new Promise<ChatData[]>(resolve => {
       this.promiseResolve = resolve;
+      console.log("postMessage", message);
       this.worker.postMessage(message);
     });
   }
