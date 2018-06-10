@@ -6,7 +6,7 @@ export type ChatData = {
   locale: string;
   mail: string;
   no: number;
-  premium?: 1 | 2;
+  premium?: 1 | 2 | 3;
   thread: number;
   user_id: string;
   vpos: number;

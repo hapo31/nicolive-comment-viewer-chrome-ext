@@ -8,7 +8,8 @@ module.exports = {
   entry: {
     script: path.join(__dirname, "./src/index.tsx"),
     loader: path.join(__dirname, "./src/loader.ts"),
-    inject: path.join(__dirname, "./src/inject.ts")
+    inject: path.join(__dirname, "./src/inject.ts"),
+    worker: path.join(__dirname, "./src/worker/FilterWorker.ts")
   },
   output: {
     filename: "[name].js",

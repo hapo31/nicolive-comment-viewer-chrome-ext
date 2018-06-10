@@ -2,7 +2,11 @@
 if (chrome) {
   const injectScriptName = "inject.js";
   const injectScriptElem = document.createElement("script");
+  const workerScriptElem = document.createElement("script");
+  const workerScriptUrl = chrome.extension.getURL("worker.js");
   const scriptURL = chrome.extension.getURL("script.js");
+
+  workerScriptElem.setAttribute("src", workerScriptUrl);
 
   injectScriptElem.setAttribute("id", "nicolive-commentviewer-extenstion");
   injectScriptElem.setAttribute(
@@ -11,4 +15,5 @@ if (chrome) {
   );
   injectScriptElem.setAttribute("data-script-url", scriptURL);
   document.documentElement.appendChild(injectScriptElem);
+  document.documentElement.appendChild(workerScriptElem);
 }

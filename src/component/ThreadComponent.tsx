@@ -33,7 +33,7 @@ export default class ThreadComponent extends React.Component<{
     const thread = this.props.threadStore;
     return (
       <ThreadView className="Thread">
-        {thread.chatList.filter((_, i) => i <= 100).map(v => {
+        {thread.chatList.map(v => {
           return (
             <GridView
               className="Comment"

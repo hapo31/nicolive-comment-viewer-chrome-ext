@@ -14,7 +14,7 @@
         }
     ],
     "web_accessible_resources": [
-      "script.js", "inject.js"
+      "script.js", "inject.js", "worker.js"
     ],
     "permissions": [
     ]
