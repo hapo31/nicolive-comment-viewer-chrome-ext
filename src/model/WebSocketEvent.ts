@@ -3,10 +3,10 @@ import { ChatData } from "../infra/ChatData";
 import { AudienceMessage } from "./AudienceMessage";
 import Queue from "./Queue";
 import WindowInjection from "../infra/WindowInjection";
+import TestDataEvent from "./TestDataEvent";
 
-type ChatMessageHandler = (data: ChatData) => void;
-type RoomMessageHandler = (data: AudienceMessage) => void;
-type StringMap<T> = { [x: string]: T } & {};
+export type ChatMessageHandler = (data: ChatData) => void;
+export type RoomMessageHandler = (data: AudienceMessage) => void;
 
 class WebSocketEvent {
   private knownWebSockets: WebSocket[] = [];
@@ -53,11 +53,27 @@ class WebSocketEvent {
   }
 
   private registerWebSocket(ws: WebSocket) {
+    if (process.env.NODE_ENV === "development") {
+      if (process.env.LOCAL) {
+        // ローカルでテストしているときはwebsocketのイベントではなくテストデータを流すイベントから受け取る
+        TestDataEvent.roomEventOnce(e => {
+          this.onRoomEvent(e);
+        });
+
+        TestDataEvent.startChatEvent(e => {
+          this.onChatEvent(e);
+        });
+        return;
+      }
+    }
+
     if (ws.url.indexOf("ws://a.live2.nicovideo.jp") >= 0) {
+      // ルームイベントのwebsocket
       ws.addEventListener("message", e => {
         this.onRoomEvent(e);
       });
     } else if (
+      // チャットイベントのwebsocket
       ws.url.search(/ws:\/\/o?msg\d{3}\.live\.nicovideo\.jp:?\d*\/websocket/) >=
       0
     ) {

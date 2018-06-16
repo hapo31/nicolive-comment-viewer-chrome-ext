@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "start": "npm run watch",
-    "watch": "webpack --config ./webpack.config.js --watch --devtool source-map --mode development --module-bind='svg=react-svg-loader' --module-bind 'ts=ts-loader' --module-bind 'tsx=ts-loader' --resolve-extensions .ts,.tsx,.js,.svg",
+    "watch:local": "cross-env LOCAL=1 webpack-serve --config ./webpack.config.js --mode development --watch --devtool source-map --module-bind='svg=react-svg-loader' --module-bind 'ts=ts-loader' --module-bind 'tsx=ts-loader' --resolve-extensions .ts,.tsx,.js,.svg",
+    "watch": "webpack --config ./webpack.config.js --mode development --watch --devtool source-map --module-bind='svg=react-svg-loader' --module-bind 'ts=ts-loader' --module-bind 'tsx=ts-loader' --resolve-extensions .ts,.tsx,.js,.svg",
     "build": "webpack --config ./webpack.config.js --mode production --module-bind='svg=react-svg-loader' --module-bind 'ts=ts-loader' --module-bind 'tsx=ts-loader' --resolve-extensions .ts,.tsx,.js,.svg",
     "clean": "rm -rf extension & rm -rf debug"
   },
@@ -23,6 +24,7 @@
     "@types/react": "^16.3.1",
     "@types/react-dom": "^16.0.4",
     "copy-webpack-plugin": "^4.5.1",
+    "cross-env": "^5.2.0",
     "prettier": "^1.11.1",
     "react-svg-loader": "^2.1.0",
     "ts-loader": "^4.2.0",
@@ -30,6 +32,7 @@
     "tslint": "^5.9.1",
     "typescript": "^2.8.4",
     "webpack": "^4.2.0",
-    "webpack-cli": "^2.0.13"
+    "webpack-cli": "^2.0.13",
+    "webpack-serve": "^1.0.4"
   }
 }

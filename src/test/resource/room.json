@@ -1,0 +1,14 @@
+[{
+  "type": "watch",
+  "body": {
+    "room": {
+      "messageServerUri": "ws://omsg102.live.nicovideo.jp:92/websocket",
+      "messageServerType": "niwavided",
+      "roomName": "ch2631252",
+      "threadId": "1627180950",
+      "forks": [0],
+      "importedForks": []
+    },
+    "command": "currentroom"
+  }
+}]
