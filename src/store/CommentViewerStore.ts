@@ -12,7 +12,6 @@ export type OnReceiveHanlder = (chatData: Partial<Chat>) => void;
 
 export default class CommentViewerStore {
   @observable public threadStoreList: ThreadStore[] = [];
-  @observable private isBroadcaster: boolean = true;
   @observable public appStartDate: Date = new Date();
 
   private onReceiveHandlers: OnReceiveHanlder[] = [];

@@ -6,9 +6,9 @@
   "license": "MIT",
   "scripts": {
     "start": "npm run watch",
-    "watch:local": "cross-env LOCAL=1 webpack-serve --config ./webpack.config.js --mode development --watch --devtool source-map --module-bind='svg=react-svg-loader' --module-bind 'ts=ts-loader' --module-bind 'tsx=ts-loader' --resolve-extensions .ts,.tsx,.js,.svg",
-    "watch": "webpack --config ./webpack.config.js --mode development --watch --devtool source-map --module-bind='svg=react-svg-loader' --module-bind 'ts=ts-loader' --module-bind 'tsx=ts-loader' --resolve-extensions .ts,.tsx,.js,.svg",
-    "build": "webpack --config ./webpack.config.js --mode production --module-bind='svg=react-svg-loader' --module-bind 'ts=ts-loader' --module-bind 'tsx=ts-loader' --resolve-extensions .ts,.tsx,.js,.svg",
+    "watch:local": "cross-env LOCAL=1 webpack-serve --config ./webpack.config.js --mode development",
+    "watch": "webpack --config ./webpack.config.js --mode development" ,
+    "build": "webpack --config ./webpack.config.js --mode production",
     "clean": "rm -rf extension & rm -rf debug"
   },
   "dependencies": {
