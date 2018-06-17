@@ -1,7 +1,6 @@
-import { observable, action, computed, toJS, runInAction } from "mobx";
+import { observable, action } from "mobx";
 import { Chat } from "../model/Chat";
 import LiveGetThreadsClient from "../infra/LiveGetThreadsClient";
-import nicoLiveData from "../infra/NicoLiveData";
 import ThreadStore from "./ThreadStore";
 import { CommandType, AudienceMessage } from "../model/AudienceMessage";
 import { ChatData } from "../infra/ChatData";
