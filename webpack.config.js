@@ -59,6 +59,26 @@ if (isDev && process.env.LOCAL) {
       host: 'localhost',
       port: servePort,
     },
+    on: {
+      'listening': () => {
+        console.log('listening');
+        const socket = new WebSocket(`ws://localhost:${servePort}`);
+        const watchPath = __dirname;
+        const options = {};
+        const watcher = chokidar.watch(watchPath, options);
+        watcher.on('change', () => {
+          const data = {
+            type: 'broadcast',
+            data: {
+              type: 'windreload',
+              data: {},
+            },
+          };
+
+          socket.send(JSON.stringify(data));
+        });
+      }
+    },
     open: true,
   }
 }
