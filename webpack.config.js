@@ -1,11 +1,16 @@
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const path = require("path");
 
-const isDev = process.env.NODE_ENV === "development";
+const isDev = process.env.NODE_ENV !== "production";
 const isLocal = !!process.env.LOCAL;
 
 const outputPath = isDev ? path.join(__dirname, isLocal ? "local" : "debug") : path.join(__dirname, "extension");
 
+const plugins = [
+  new CopyWebpackPlugin([{
+    from: path.join(__dirname, "assets/manifest.json"),
+  }])
+];
 
 module.exports = {
   entry: {
@@ -40,11 +45,7 @@ module.exports = {
       }
     }]
   },
-  plugins: [
-    new CopyWebpackPlugin([{
-      from: path.join(__dirname, "assets/manifest.json"),
-    }])
-  ]
+  plugins
 };
 
 if (isDev && process.env.LOCAL) {
