@@ -56,9 +56,9 @@ class WebSocketEvent {
     if (process.env.NODE_ENV === "development") {
       if (process.env.LOCAL) {
         // ローカルでテストしているときはwebsocketのイベントではなくテストデータを流すイベントから受け取る
-        TestDataEvent.roomEventOnce(e => {
-          this.onRoomEvent(e);
-        });
+        // TestDataEvent.roomEventOnce(e => {
+        //   this.onRoomEvent(e);
+        // });
 
         TestDataEvent.startChatEvent(e => {
           this.onChatEvent(e);

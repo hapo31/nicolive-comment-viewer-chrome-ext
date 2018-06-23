@@ -2,6 +2,11 @@ import * as React from "react";
 import { render } from "react-dom";
 import "tslib";
 import RootComponent from "./component/RootComponent";
+import webSocketEvent from "./model/WebSocketEvent";
+
+if (process.env.NODE_ENV === "development") {
+  const _ = webSocketEvent;
+}
 
 console.log("ニコ生コメントビューワー ver 0.1");
 

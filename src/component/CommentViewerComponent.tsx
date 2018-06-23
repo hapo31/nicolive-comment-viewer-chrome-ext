@@ -10,6 +10,8 @@ import Error from "../atom/Error";
 const defaultStyle = styled.default;
 
 const CommentViewerRoot = defaultStyle.div`
+  position: relative;
+  z-index: 501;
   background-color: #fff;
   border-radius: 5px;
   border: 1px solid #ddd;
