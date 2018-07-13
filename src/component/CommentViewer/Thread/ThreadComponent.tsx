@@ -1,8 +1,8 @@
 import * as React from "react";
 import { inject, observer } from "mobx-react";
-import ThreadStore from "../store/ThreadStore";
+import ThreadStore from "../../../store/ThreadStore";
 import * as styled from "styled-components";
-import { GridView, Grid } from "../atom/Grid";
+import { GridView, Grid } from "../../../atom/Grid";
 
 const LINE_HEIGHT = "24px";
 

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { BOUYOMI_SERVER } from "../constant/Servers";
+import { BOUYOMI_SERVER } from "../../constant/Servers";
 
 type Props = {
   message?: string;
