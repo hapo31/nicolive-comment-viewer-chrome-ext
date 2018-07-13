@@ -1,11 +1,11 @@
 import React from "react";
-import CommentViewerStore from "../../store/CommentViewerStore";
-import { inject, observer } from "mobx-react";
-import ThreadComponent from "./Thread/ThreadComponent";
+import CommentViewerStore from "../store/CommentViewerStore";
+import { inject, observer, Provider } from "mobx-react";
+import ThreadComponent from "./CommentViewer/Thread/ThreadComponent";
 import YomiageSkeltonComponent from "./YomiageSkelton";
 import * as styled from "styled-components";
-import DebuggerContainer from "../DebuggerContainer";
-import Error from "../../atom/Error";
+import DebuggerContainer from "./DebuggerContainer";
+import Error from "../atom/Error";
 
 const defaultStyle = styled.default;
 

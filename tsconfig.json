@@ -9,6 +9,7 @@
     "noUnusedParameters": true,
     "noEmitHelpers": true,
     "importHelpers": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "esModuleInterop": true
   }
 }

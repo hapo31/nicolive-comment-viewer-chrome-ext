@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { BOUYOMI_SERVER } from "../../constant/Servers";
 
 type Props = {
