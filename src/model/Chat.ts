@@ -9,6 +9,9 @@ export class Chat {
   public readonly userId: string;
   public readonly vPos: number;
 
+  public name = "";
+  public color = "";
+
   private readonly internalId: string;
   private readonly premium?: 1 | 2 | 3;
 
